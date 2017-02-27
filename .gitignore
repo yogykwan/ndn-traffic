@@ -1,11 +1,11 @@
 # IDE
-*/.project
-*/.cproject
-*/.pydevproject
-*/.settings
+.project
+.cproject
+.pydevproject
+.settings
 
 # build
-*/.waf-1.*
-*/.lock-waf_darwin_build
-*/build/
-*/*.pyc
+.waf-1.*
+.lock-waf_darwin_build
+build
+*.py[cod]
