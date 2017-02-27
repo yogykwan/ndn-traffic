@@ -37,6 +37,7 @@ public:
   void logStatistics();
   void signalHandler();
 
+  void checkProcessEnd();
   void onData(const Interest&, const Data&, time::steady_clock::TimePoint);
   void onNack(const Interest&, const lp::Nack&);
   void onTimeout(const Interest&);
@@ -63,6 +64,7 @@ private:
   Scheduler m_scheduler;
 
   int m_nOutInterest;
+  int m_nInPackets;
   int m_nInData;
   int m_nInNack;
   double m_totalRtt;

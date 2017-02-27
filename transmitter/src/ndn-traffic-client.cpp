@@ -14,6 +14,7 @@ NdnTrafficClient::NdnTrafficClient(const char *programName)
   , m_face(m_ioService)
   , m_scheduler(m_ioService)
   , m_nOutInterest(0)
+  , m_nInPackets(0)
   , m_nInData(0)
   , m_nInNack(0)
   , m_totalRtt(0.0) {
@@ -101,6 +102,16 @@ void NdnTrafficClient::signalHandler() {
   exit(m_hasError ? EXIT_FAILURE : EXIT_SUCCESS);
 }
 
+void NdnTrafficClient::checkProcessEnd() {
+	m_nInPackets++;
+  if (m_nMaximumInterests >= 0 && m_nInPackets == m_nMaximumInterests) {
+      logStatistics();
+      m_logger.shutdownLogger();
+      m_face.shutdown();
+      m_ioService.stop();
+  }
+}
+
 void NdnTrafficClient::onData(const Interest& interest,
 		const Data& data,
 		time::steady_clock::TimePoint sentTime) {
@@ -108,15 +119,21 @@ void NdnTrafficClient::onData(const Interest& interest,
 	++m_nInData;
 	double roundTripTime = (time::steady_clock::now() - sentTime).count() / 1000000.0;
 	m_totalRtt += roundTripTime;
+
+	checkProcessEnd();
 }
 
 void NdnTrafficClient::onNack(const Interest& interest, const lp::Nack& nack) {
 	m_logger.log("Interest Nack'd - Name=" + interest.getName().toUri() +
 			", NackReason=" + to_string((int)nack.getReason()));
 	++m_nInNack;
+
+	checkProcessEnd();
 }
 void NdnTrafficClient::onTimeout(const Interest& interest) {
   m_logger.log("Interest Timed Out - Name=" + interest.getName().toUri());
+
+  checkProcessEnd();
 }
 
 name::Component NdnTrafficClient::generateNameComponent() {
@@ -160,12 +177,13 @@ void NdnTrafficClient::run() {
 	m_scheduler.scheduleEvent(m_interestInterval,
 			bind(&NdnTrafficClient::sendInterest, this));
 
-	// m_ioService.run() will block until all events finished or m_ioService.stop() is called
-	// m_ioService.run();
+  try{
+		// m_ioService.run() will block until all events finished or m_ioService.stop() is called
+    m_ioService.run();
 
-	// processEvents will block until the requested data received or timeout occurs.
-	 try{
-		 m_face.processEvents();
+    // Alternatively, m_face.processEvents() can also be called.
+    // processEvents will block until the requested data received or timeout occurs.
+    // m_face.processEvents();
 	 } catch (const std::exception& e) {
      m_logger.log("ERROR: " + std::string(e.what()));
      m_logger.shutdownLogger();
