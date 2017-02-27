@@ -1,6 +1,6 @@
 # -*- Mode: python; py-indent-offset: 4; indent-tabs-mode: nil; coding: utf-8; -*-
-VERSION='0.1'
-APPNAME="ndn-traffic-trasmitter”
+VERSION='1.0'
+APPNAME="ndn-traffic-transmitter"
 
 from waflib import Utils
 import os
@@ -21,14 +21,23 @@ def configure(conf):
 def build(bld):
     bld.program(
         features='cxx',
-        target='ndn-client’,
-        source='src/client.cpp',
+        target='ndn-server',
+        source='src/ndn-server.cpp',
         use='NDN_CXX',
         )
-
+        
+    bld.stlib(
+        features='cxx',
+        target='ndn-traffic-client',
+        source='src/ndn-traffic-client.cpp',
+        use='NDN_CXX',
+        )
+        
     bld.program(
         features='cxx',
-        target='ndn-server',
-        source='src/server.cpp',
-        use='NDN_CXX',
+        target='ndn-client',
+        source='src/client.cpp',
+        includes = 'src/',
+        use = ['NDN_CXX','ndn-traffic-client'],
         )
+        
