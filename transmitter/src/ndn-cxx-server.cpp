@@ -52,8 +52,7 @@ private:
 
     // Create new name, based on Interest's name
     Name dataName(interest.getName());
-    dataName
-      .appendVersion();  // add "version" component (current UNIX timestamp in milliseconds)
+    dataName.appendVersion();  // add "version" component (current UNIX timestamp in milliseconds)
 
     static const std::string content = "ict.ac";
 
