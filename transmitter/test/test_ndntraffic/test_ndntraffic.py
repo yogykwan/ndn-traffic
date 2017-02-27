@@ -19,13 +19,13 @@ class test_ndntraffic(unittest.TestCase, process_manager.ProcessManager):
         print "*****************************"
 
     def tearDown(self):
-        #self.killNfd()
+        self.killNfd()
         self.killProcess("ndn-server")
         self.killProcess("ndn-client")
         self.cleanupProcesses()
 
     def test_traffic(self):
-        #self.startNfd()
+        self.startNfd()
         time.sleep(1)
         self.startProcess("ndn-server",
             ["ndn-server"],
