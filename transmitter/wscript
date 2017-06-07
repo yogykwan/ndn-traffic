@@ -21,7 +21,7 @@ def configure(conf):
 def build(bld):        
     bld.stlib(
         features='cxx',
-        target='ndn-traffic-client',
+        target='ndn-client-lib',
         source='src/ndn-traffic-client.cpp',
         use='NDN_CXX',
         )
@@ -31,7 +31,7 @@ def build(bld):
         target='ndn-client',
         source='src/client.cpp',
         includes = 'src/',
-        use = ['NDN_CXX','ndn-traffic-client'],
+        use = ['NDN_CXX','ndn-client-lib'],
         )
         
     bld.program(
@@ -45,6 +45,25 @@ def build(bld):
         features='cxx',
         target='ndn-server',
         source='src/server.cpp',
+        use='NDN_CXX',
+        )
+        
+    bld.program(
+        features='cxx',
+        target='ndn-producer',
+        source='src/producer.cpp',
+        use='NDN_CXX',
+        )
+    bld.program(
+        features='cxx',
+        target='ndn-consumer',
+        source='src/consumer.cpp',
+        use='NDN_CXX',
+        )
+    bld.program(
+        features='cxx',
+        target='ndn-consumer-with-timer',
+        source='src/consumer-with-timer.cpp',
         use='NDN_CXX',
         )
         

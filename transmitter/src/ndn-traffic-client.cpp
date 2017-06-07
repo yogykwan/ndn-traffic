@@ -28,7 +28,7 @@ void NdnTrafficClient::usage() {
             << "Interests are continuously generated unless a total number is specified.\n"
             << "\n"
             << "Options:\n"
-            << "  [-i interval] - set interest generation interval in microseconds (default 1000)\n"
+            << "  [-i interval] - set interest generation interval in milliseconds (default 1000)\n"
             << "  [-c count]    - set total number of interests to be generated\n"
 		        << "  [-f conf]     - set traffic configuration file\n"
             << "  [-q]          - turn off console output\n"
@@ -143,7 +143,7 @@ name::Component NdnTrafficClient::generateNameComponent() {
 }
 
 void NdnTrafficClient::sendInterest() {
-	Name interestName("/ndn/");
+	Name interestName("/example/");
 	interestName.append(generateNameComponent());
 	Interest interest(interestName);
 	interest.setInterestLifetime(time::seconds(4));

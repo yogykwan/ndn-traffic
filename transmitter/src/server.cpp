@@ -130,7 +130,7 @@ public:
 
     m_logger.initializeLog(m_instanceId);
 
-    m_face.setInterestFilter("/ndn",
+    m_face.setInterestFilter("/example",
                              bind(&NdnProducer::onInterest, this, _1, _2),
                              bind(&NdnProducer::onRegisterFailed, this, _1, _2));
 
