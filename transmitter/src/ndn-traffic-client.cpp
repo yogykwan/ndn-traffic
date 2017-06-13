@@ -115,7 +115,7 @@ void NdnTrafficClient::checkProcessEnd() {
 void NdnTrafficClient::onData(const Interest& interest,
 		const Data& data,
 		time::steady_clock::TimePoint sentTime) {
-  m_logger.log("Interest Received - Name=" + interest.getName().toUri());
+//  m_logger.log("Data Received - Name=" + interest.getName().toUri());
 	++m_nInData;
 	double roundTripTime = (time::steady_clock::now() - sentTime).count() / 1000000.0;
 	m_totalRtt += roundTripTime;
@@ -146,7 +146,7 @@ void NdnTrafficClient::sendInterest() {
 	Name interestName("/example/");
 	interestName.append(generateNameComponent());
 	Interest interest(interestName);
-	interest.setInterestLifetime(time::seconds(4));
+	interest.setInterestLifetime(time::seconds(100));
 
   try {
   	time::steady_clock::TimePoint sentTime = time::steady_clock::now();
@@ -155,8 +155,8 @@ void NdnTrafficClient::sendInterest() {
 													 bind(&NdnTrafficClient::onNack, this, _1, _2),
 													 bind(&NdnTrafficClient::onTimeout, this, _1));
 		m_nOutInterest++;
-    m_logger.log("Sending Interest   - GlobalID=" + to_string(m_nOutInterest) +
-        ", Name=" + interest.getName().toUri());
+//    m_logger.log("Sending Interest   - GlobalID=" + to_string(m_nOutInterest) +
+//        ", Name=" + interest.getName().toUri());
 
     if(m_nMaximumInterests > 0 && m_nOutInterest >= m_nMaximumInterests) return;
     m_scheduler.scheduleEvent(m_interestInterval,
